@@ -22,7 +22,6 @@ ap.add_argument("-l", "--labels", required=True,
 	help="path to ImageNet labels (i.e., syn-sets)")
 args = vars(ap.parse_args())
 
-vector = []
 face_cascade = cv2.CascadeClassifier('./cascade_files/haarcascade_frontalface_alt.xml')
 
 def face_detector(frame):
@@ -51,7 +50,7 @@ vs = cv2.VideoCapture(0)
 #vs = cv2.VideoCapture('beyota1.mp4')
 time.sleep(2.0)
 fps = FPS().start()
-
+lista_nueva = []
 # loop over the frames from the video stream
 while True:
 	# grab the frame from the threaded video stream and resize it
@@ -79,40 +78,27 @@ while True:
 	idxsss = [x for x in idxss if (x>=151) & (x<=267)]
 
 #	for i in detections[0]:
-
 	if face_detector(frame):
 		for (i, idxx) in enumerate(idxsss):
 			if i == 0:
-				time_rects = time.ctime()
-				raza = "{}".format(classes[idxx])
-				vector.append(raza)
+				lista_nueva = [idxx]
 				text1 = "HUMAN FACE: Si fueras un perro serias un {}, {:.2f}%".format(classes[idxx], detections[0][idxx]*100)
 				cv2.putText(frame, text1, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
 	else:
 		for (i, idx) in enumerate(idxs):
 			if i == 0:
 				if ((idx >= 151) & (idx <=267) & (detections[0][idx]*100>40)):
-					time_rects = time.ctime()
-					raza = "{}".format(classes[idx])
-					vector.append(raza)
+					lista_nueva = [idx]
 					text = "DOG: raza {}, {:.2f}%".format(classes[idx],detections[0][idx] * 100)
 					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
 				else:
-					time_rects = time.ctime()
-					raza = "{}".format(classes[idx])
-					vector.append(raza)
+					lista_nueva = [999]
 					text = "DOG: Criollo, {:.2f}%".format(100 - (detections[0][idx]*100))
 					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
 
-	lista_nueva = []
-	for i in vector:
-		if i not in lista_nueva:
-				lista_nueva.append(i)
-
+	print(lista_nueva)
 	df = pd.DataFrame(lista_nueva)
-	df.to_csv('pet.csv')
-		# display the predicted label + associated probability to the
-		# console
+	df[0].to_csv('pet.csv', index=False)
 
 	# show the output frame
 	cv2.imshow("Frame", frame)
