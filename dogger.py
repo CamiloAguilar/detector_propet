@@ -78,25 +78,36 @@ while True:
 	idxsss = [x for x in idxss if (x>=151) & (x<=267)]
 
 #	for i in detections[0]:
-	if face_detector(frame):
-		for (i, idxx) in enumerate(idxsss):
-			if i == 0:
-				lista_nueva = [idxx]
-				text1 = "HUMAN FACE: Si fueras un perro serias un {}, {:.2f}%".format(classes[idxx], detections[0][idxx]*100)
-				cv2.putText(frame, text1, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
-	else:
-		for (i, idx) in enumerate(idxs):
-			if i == 0:
-				if ((idx >= 151) & (idx <=267) & (detections[0][idx]*100>40)):
-					lista_nueva = [idx]
-					text = "DOG: raza {}, {:.2f}%".format(classes[idx],detections[0][idx] * 100)
-					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
-				else:
-					lista_nueva = [999]
-					text = "DOG: Criollo, {:.2f}%".format(100 - (detections[0][idx]*100))
-					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
+#	if face_detector(frame):
+#		for (i, idxx) in enumerate(idxsss):
+#			if i == 0:
+#				lista_nueva = [idxx]
+#				text1 = "HUMAN FACE: Si fueras un perro serias un {}, {:.2f}%".format(classes[idxx], detections[0][idxx]*100)
+#				cv2.putText(frame, text1, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
+#	else:
+#		for (i, idx) in enumerate(idxs):
+#			if i == 0:
+#				if ((idx >= 151) & (idx <=267) & (detections[0][idx]*100>40)):
+#					lista_nueva = [idx]
+#					text = "DOG: raza {}, {:.2f}%".format(classes[idx],detections[0][idx] * 100)
+#					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
+#				else:
+#					lista_nueva = [999]
+#					text = "DOG: Criollo, {:.2f}%".format(100 - (detections[0][idx]*100))
+#					cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
 
-	print(lista_nueva)
+	for (i, idx) in enumerate(idxs):
+		if i == 0:
+			if ((idx >= 151) & (idx <=267) & (detections[0][idx]*100>40)):
+				lista_nueva = [idx]
+				text = "DOG: raza {}, {:.2f}%".format(classes[idx],detections[0][idx] * 100)
+				cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
+			else:
+				lista_nueva = [999]
+				text = "DOG: Criollo, {:.2f}%".format(100 - (detections[0][idx]*100))
+				cv2.putText(frame, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX,0.7, (0, 0, 255), 2)
+
+
 	df = pd.DataFrame(lista_nueva)
 	df[0].to_csv('pet.csv', index=False)
 
